@@ -1,0 +1,14 @@
+@import "bootstrap.min.css";
+
+.btn {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0 0.325rem 0.325rem 0;
+}
+
+.btn:hover {
+  border: 1px solid var(--bs-border-color);
+}
+
+.actionCheckbox {
+  cursor: pointer;
+}

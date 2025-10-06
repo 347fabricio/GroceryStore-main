@@ -1,0 +1,16 @@
+!SESSION 2025-09-16 15:59:51.018 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.7
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-09-16 15:59:52.215
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (670) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-09-16 15:59:52.390
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY ch.qos.logback.classic 1 0 2025-09-16 15:59:57.349
+!MESSAGE Logback config file: /home/catatau/Documents/projects/groceyStore_springboot/GroceryStore/.metadata/.plugins/org.eclipse.m2e.logback/logback.2.7.100.20250418-1315.xml
