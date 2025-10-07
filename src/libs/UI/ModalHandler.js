@@ -20,10 +20,12 @@ export class ModalHandler {
     const supplier = cells[0].textContent.trim();
     const email = cells[1].textContent.trim();
     const phoneNumber = cells[2].textContent.trim();
+    const isActive = cells[3].dataset.active === "true" ? true : false;
 
     this.#modalBody[0].value = supplier;
     this.#modalBody[1].value = email;
     this.#modalBody[2].value = phoneNumber;
+    this.#modalBody[3].checked = isActive;
   }
 
   static toggleModal() {

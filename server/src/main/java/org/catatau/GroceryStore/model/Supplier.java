@@ -35,5 +35,9 @@ public class Supplier {
 	private String phoneNumber;
 	
 	@Column(name = "is_active")
-	private boolean isActive = true;
+	private Boolean isActive;
+	
+//	public boolean getSupplierActive() {
+//		return this.isActive;
+//	}
 }

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.catatau.GroceryStore.controller.exceptions.EntityAlreadyExistsException;
 import org.catatau.GroceryStore.model.Product;
 import org.catatau.GroceryStore.repository.ProductRepository;
+import org.catatau.GroceryStore.service.exceptions.EntityAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

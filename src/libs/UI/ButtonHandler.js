@@ -1,24 +1,30 @@
 import { ToastHandler } from "./ToastHandler.js";
 import { ModalHandler } from "./ModalHandler.js";
 import { APIConnector } from "../API/suppliers.js";
-import { Table } from "../utils/Table.js";
 import { TableUtils } from "../utils/TableUtils.js";
+import { SupplierValidator } from "../utils/SupplierValidator.js";
+import { SupplierUtils } from "../utils/SupplierUtils.js";
 
 export class ButtonHandler {
-  static #checkBox;
-  static #modalTitle = document.querySelector("#modalLabel");
-  static #submitBtn = document.querySelector("#submitBtn");
+  async #submit(body, method) {
+    switch (method) {
+      case "DELETE":
+        return await APIConnector.deactivate("supplier", body);
+      case "POST":
+        return await APIConnector.post("supplier", body);
+      case "PUT":
+        return await APIConnector.put("supplier", body);
+    }
+  }
 
-  static add() {
+  add() {
     document.querySelector("#addRow").addEventListener("click", () => {
       ModalHandler.toggleModal();
 
-      this.#submitBtn.addEventListener("click", async () => {
-        const supplier = TableUtils.getSupplierData();
+      document.querySelector("#submitBtn").addEventListener("click", async () => {
         try {
-          supplier.name = Table.isValidName(supplier.name);
-          supplier.email = Table.isValidEmail(supplier.email);
-          supplier.phoneNumber = Table.formatNumber(supplier.phoneNumber).digitsOnly;
+          const supplier = SupplierUtils.getSupplierData();
+          SupplierValidator.validateSupplier(supplier);
 
           const response = await this.#submit(supplier, "POST");
           if (response.ok) window.location.reload();
@@ -30,62 +36,54 @@ export class ButtonHandler {
     });
   }
 
-  static delete() {
+  deactivate() {
     document.querySelector("#delRow").addEventListener("click", async () => {
-      this.#checkBox = document.querySelectorAll(".actionCheckbox:checked");
+      const checkboxes = TableUtils.getCheckedCheckboxes();
 
-      if (this.#checkBox.length == 0) ToastHandler.showToast("Selecione o(s) produto(s) a ser removido.");
+      try {
+        if (checkboxes.length === 0) throw new Error("Selecione o(s) produto(s) a ser removido.");
 
-      let supplier_id = Number.parseInt(this.#checkBox[0].value);
-      const responseStatus = await this.#submit(supplier_id, "DELETE");
-      // console.log(responseStatus);
+        for (const supplier_id of checkboxes) {
+          const responseStatus = await this.#submit(supplier_id, "DELETE");
+        }
 
-      if (responseStatus.ok) window.location.reload();
-      // Table.removeRows(this.#checkBox);
+        window.location.reload();
+      } catch (error) {
+        !error.ok ? setTimeout(() => window.location.reload(), 2000) : ToastHandler.showToast(error.message);
+      }
     });
   }
 
-  static update() {
+  update() {
     document.querySelector("#updateRow").addEventListener("click", () => {
-      this.#checkBox = document.querySelectorAll(".actionCheckbox:checked");
-      this.#modalTitle.textContent = "Atualizar Produto";
+      const checkbox = document.querySelectorAll(".actionCheckbox:checked");
+      document.querySelector("#modalLabel").textContent = "Atualizar Produto";
 
-      switch (this.#checkBox.length) {
+      switch (checkbox.length) {
         case 0:
           ToastHandler.showToast("Selecione o produto a ser atualizado.");
           return;
         case 1:
           ModalHandler.toggleModal();
-          ModalHandler.buildUpdate(this.#checkBox[0]);
+          ModalHandler.buildUpdate(checkbox[0]);
+          SupplierUtils.hideSwitchField();
           break;
         default:
           ToastHandler.showToast("Você só pode atualizar <strong>um</strong> produto por vez.");
           return;
       }
-
-      this.#submitBtn.addEventListener("click", async () => {
-        let supplier = TableUtils.getSupplierData();
-        supplier.id = this.#checkBox[0].value;
-        const responseStatus = await this.#submit(supplier, "PUT");
-
-        if (responseStatus.ok) window.location.reload();
-      });
     });
-  }
+    document.querySelector("#submitBtn").addEventListener("click", async () => {
+      let supplier = SupplierUtils.getSupplierData(true);
+      try {
+        SupplierValidator.validateSupplier(supplier);
 
-  static async #submit(body, method) {
-    try {
-      switch (method) {
-        case "DELETE":
-          return await APIConnector.delete("supplier", body);
-        case "POST":
-          return await APIConnector.post("supplier", body);
-        case "PUT":
-          return await APIConnector.put("supplier", body);
+        const response = await this.#submit(supplier, "PUT");
+        if (response.ok) window.location.reload();
+      } catch (error) {
+        ToastHandler.showToast(error.message);
+        return;
       }
-    } catch (error) {
-      console.log(error);
-      return;
-    }
+    });
   }
 }

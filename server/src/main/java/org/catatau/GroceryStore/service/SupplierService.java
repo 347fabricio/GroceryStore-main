@@ -1,5 +1,6 @@
 package org.catatau.GroceryStore.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,10 @@ public class SupplierService {
 	private SupplierRepository repo;
 
 	public List<Supplier> getAllSuppliers() {
-		return repo.findAll();
+		List<Supplier> suppliers = repo.findAll();
+	    suppliers.sort(Comparator.comparing(Supplier::getIsActive).reversed());	
+	    
+		return suppliers;
 	}
 
 	public Supplier getSupplierById(Integer id) {
@@ -28,13 +32,13 @@ public class SupplierService {
 		return repo.save(supplier);
 	}
 
-	public void deleteSupplier(Integer id) {
+	public void deactivateSupplierById(Integer id) {
 		Optional<Supplier> supplierOpt = repo.findById(id);
 		if (!supplierOpt.isPresent())
 			throw new EntityNotFoundException(String.format("Supplier with ID %d not found.", id));
 
 		Supplier updatedSupplier = supplierOpt.get();
-		updatedSupplier.setActive(false);
+		updatedSupplier.setIsActive(false);
 		repo.save(updatedSupplier);
 	}
 
@@ -48,6 +52,7 @@ public class SupplierService {
 		updatedSupplier.setName(supplier.getName());
 		updatedSupplier.setEmail(supplier.getEmail());
 		updatedSupplier.setPhoneNumber(supplier.getPhoneNumber());
+		updatedSupplier.setIsActive(supplier.getIsActive());
 		return repo.save(updatedSupplier);
 	}
 }

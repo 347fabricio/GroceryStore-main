@@ -26,8 +26,7 @@ public class SupplierController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<Supplier>> getAllSuppliers() {
 		List<Supplier> suppliers = service.getAllSuppliers();
-		return suppliers.isEmpty() ? ResponseEntity.noContent().build()
-				: ResponseEntity.ok(suppliers);
+		return suppliers.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(suppliers);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
@@ -36,24 +35,19 @@ public class SupplierController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Supplier> createSuppliers(@Valid @RequestBody Supplier supplier) {
+	public ResponseEntity<Supplier> createSuppliers(@RequestBody Supplier supplier) {
 		Supplier newSupplier = service.createSupplier(supplier);
 		return ResponseEntity.status(HttpStatus.CREATED).body(newSupplier);
 	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> deleteSupplier(@PathVariable("id") Integer id) {
-//		int supplierId = Integer.parseInt(id);
-		service.deleteSupplier(id);
+	public ResponseEntity<Void> deactivateSupplierById(@PathVariable("id") Integer id) {
+		service.deactivateSupplierById(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
 	public ResponseEntity<Supplier> updateSupplier(@Valid @RequestBody Supplier supplier) {
-		System.out.println(String.format("%s %s %s %s", supplier.getId(), supplier.getName(),
-				supplier.getEmail(), supplier.getPhoneNumber()));
-		if (supplier == null || supplier.getId() == null)
-			return ResponseEntity.badRequest().build();
 		Supplier updatedSupplier = service.updateSupplier(supplier);
 		return ResponseEntity.ok(updatedSupplier);
 	}

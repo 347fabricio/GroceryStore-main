@@ -2,10 +2,13 @@ import { ButtonHandler } from "../../libs/UI/ButtonHandler.js";
 import { Table } from "../../libs/utils/Table.js";
 
 (async () => {
-  ButtonHandler.add();
-  ButtonHandler.delete();
-  ButtonHandler.update();
+  const buttonHandler = new ButtonHandler();
+  const table = new Table();
 
-  await Table.buildSupplierTable();
-  Table.handleRowClick();
+  buttonHandler.add();
+  buttonHandler.deactivate();
+  buttonHandler.update();
+
+  await table.buildSupplierTable();
+  table.handleRowClick();
 })();

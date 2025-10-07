@@ -15,12 +15,13 @@ export class APIConnector {
 
       if (!request.ok) {
         const errorData = await request.json();
-        throw new Error(errorData.message);
+        throw new Error(errorData);
       }
 
       return request;
     } catch (error) {
-      throw error;
+      ToastHandler.showToast(error.message);
+      return;
     }
   }
 
@@ -56,7 +57,7 @@ export class APIConnector {
     const response = await this.#fetchData(path, "PUT", body);
     return response;
   }
-  static async delete(path, id) {
+  static async deactivate(path, id) {
     try {
       const request = await fetch(`${this.#URL}/${path}/${id}`, { method: "DELETE" });
 
@@ -67,6 +68,7 @@ export class APIConnector {
 
       return request;
     } catch (error) {
+      ToastHandler.showToast(error.message);
       throw error;
     }
   }

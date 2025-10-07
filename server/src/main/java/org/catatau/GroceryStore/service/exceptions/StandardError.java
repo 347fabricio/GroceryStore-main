@@ -1,4 +1,4 @@
-package org.catatau.GroceryStore.controller.exceptions;
+package org.catatau.GroceryStore.service.exceptions;
 
 import java.io.Serializable;
 import java.time.Instant;
