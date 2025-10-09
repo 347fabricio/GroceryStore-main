@@ -43,6 +43,26 @@ export class APIConnector {
     }
   }
 
+  static async getByPage(path, page) {
+    try {
+      const request = await fetch(`${this.#URL}/${path}?page=${page}`, { method: "GET" });
+
+      if (!request.ok) {
+        const errorData = await request.json();
+        throw new Error(errorData.message);
+      }
+
+      if (request.status === 204) throw new Error("Não há fornecedores.");
+
+      const response = await request.json();
+
+      return response;
+    } catch (error) {
+      ToastHandler.showToast(error.message);
+      throw error;
+    }
+  }
+
   // static async getById(path, id) {
   //   const response = await this.#fetchData(this.#URL, path, id, "GET");
   //   return response;

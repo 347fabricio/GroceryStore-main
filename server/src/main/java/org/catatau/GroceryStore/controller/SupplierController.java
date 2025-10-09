@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -24,10 +25,23 @@ public class SupplierController {
 	private SupplierService service;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<Supplier>> getAllSuppliers() {
-		List<Supplier> suppliers = service.getAllSuppliers();
+	public ResponseEntity<List<Supplier>> getSuppliers(@RequestParam(required = false) String page) {
+		List<Supplier> suppliers = (page == null) ? service.getAllSuppliers() : service.getSuppliersByPage(page);
+
 		return suppliers.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(suppliers);
 	}
+
+//	@RequestMapping(method = RequestMethod.GET)
+//	public ResponseEntity<List<Supplier>> getAllSuppliers() {
+//		List<Supplier> suppliers = service.getAllSuppliers();
+//		return suppliers.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(suppliers);
+//	}
+//	
+//	@RequestMapping(method = RequestMethod.GET)
+//	public ResponseEntity<List<Supplier>> getSuppliersByPage(Integer page) {
+//		List<Supplier> suppliers = service.getSuppliersByPage(page);
+//		return suppliers.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(suppliers);
+//	}
 
 	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Supplier> getSupplierById(@PathVariable("id") Integer id) {

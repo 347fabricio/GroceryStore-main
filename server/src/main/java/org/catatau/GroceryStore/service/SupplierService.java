@@ -1,5 +1,6 @@
 package org.catatau.GroceryStore.service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,22 @@ public class SupplierService {
 	    suppliers.sort(Comparator.comparing(Supplier::getIsActive).reversed());	
 	    
 		return suppliers;
+	}
+	
+	public List<Supplier> getSuppliersByPage(String page) {
+		System.out.println("Get by page...");
+		int pageSize = 10;
+		List<Supplier> suppliers = repo.findAll();
+		suppliers.sort(Comparator.comparing(Supplier::getIsActive).reversed());	
+		
+		int fromIndex = Integer.parseInt(page) * pageSize;
+		
+		if (fromIndex >= suppliers.size()) return new ArrayList<>();
+		
+		int toIndex = Math.min(fromIndex + pageSize, suppliers.size());
+	    
+		
+		return suppliers.subList(fromIndex, toIndex);
 	}
 
 	public Supplier getSupplierById(Integer id) {

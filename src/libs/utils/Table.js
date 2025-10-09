@@ -1,12 +1,26 @@
 import { APIConnector } from "../API/suppliers.js";
+import { SupplierStorage } from "../data/SupplierStorage.js";
 import { SupplierValidator } from "./SupplierValidator.js";
-import { TableUtils } from "./TableUtils.js";
 
 export class Table {
   async buildSupplierTable() {
-    const suppliers = await APIConnector.getAll("supplier");
+    const supplierStorage = new SupplierStorage();
+    await supplierStorage.init();
+
+    SupplierStorage.setSupplier();
+    const suppliers = await supplierStorage.getSuppliersByPage();
+
+    Table.renderSupplierRows(suppliers);
+    supplierStorage.buildPages();
+    supplierStorage.nextPage();
+    supplierStorage.goToPage();
+    supplierStorage.previousPage();
+  }
+
+  static renderSupplierRows(suppliers) {
     const table = document.querySelector(".table > tbody");
-    // const columns = [...document.querySelectorAll(".table > tbody > tr > td")];
+
+    [...table.children].forEach((row) => row.remove());
 
     for (let i = 0; i < suppliers.length; i++) {
       const entries = Object.entries(suppliers[i]);
@@ -75,5 +89,21 @@ export class Table {
 
   static removeRows(rows) {
     rows.forEach((row) => row.closest("tr").remove());
+  }
+
+  static async pagination(page) {
+    try {
+      const response = await APIConnector.getByPage("supplier", page);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static nextPage(totalPages) {
+    // if (totalPages > actualPage)
+  }
+  static previousPage() {
+    // if (actualPage == 0)
   }
 }

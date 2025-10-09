@@ -12,3 +12,8 @@
 .actionCheckbox {
   cursor: pointer;
 }
+
+.t-inner {
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
